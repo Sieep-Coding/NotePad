@@ -118,6 +118,12 @@ namespace NotePad
             }
             Console.WriteLine("Note not found.");
         }
+        
+        static void PrintHelp()
+        {
+            Console.WriteLine("----------HELP----------\n");
+            Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can add a note.\nBy entering 2, you can delete a note.\nBy entering 3, you can exit the program.\n");
+        }
         static void Main()
         {
             // RunMainIfNoNoteInPast24Hours();
@@ -130,14 +136,16 @@ namespace NotePad
             // {
             try
             {
-                Console.WriteLine("\nEnter 0: List all note titles\nEnter 1: Add a note\nEnter 2: Delete a note\nEnter 3: Exit");
+                Console.WriteLine("----------Welcome to NotePad----------\n");
+                Console.WriteLine("0: List all note titles\n1: Add a note\n2: Delete a note\n3: Exit\n4: Help\n");
+                Console.WriteLine("Enter selection:");
                 var selection = Console.ReadLine()?.ToString() ?? string.Empty;
                 if (selection is null || selection == string.Empty)
                 {
                     Console.WriteLine("Invalid selection");
                     return;
                 }
-                if (selection != "0" && selection != "1" && selection != "2" && selection != "3")
+                if (selection != "0" && selection != "1" && selection != "2" && selection != "3" && selection != "4")
                 {
                     Console.WriteLine("Invalid selection");
                     return;
@@ -156,6 +164,9 @@ namespace NotePad
                     case "3":
                         Console.WriteLine("Exiting...");
                         Environment.Exit(0);
+                        break;
+                    case "4":
+                        PrintHelp();
                         break;
                     default:
                         Console.WriteLine("Invalid selection");
