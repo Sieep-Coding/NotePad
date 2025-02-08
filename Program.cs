@@ -118,11 +118,39 @@ namespace NotePad
             }
             Console.WriteLine("Note not found.");
         }
+        /// <summary>
+        /// Select only one note to display.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        static void SelectOnlyOneNoteToDisplay()
+        {
+            Console.WriteLine("Enter note title to display:");
+            var title = Console.ReadLine();
+            var notes = File.ReadAllText("notes.json");
+            var parsedNotes = JsonNode.Parse(notes);
+            if (parsedNotes == null || notes == null)
+            {
+                throw new Exception("No notes found.");
+            }
+            var notesArray = parsedNotes.AsArray();
+            foreach (var noteNode in notesArray)
+            {
+                if (noteNode is JsonObject)
+                {
+                    if (noteNode["Title"]?.ToString() == title)
+                    {
+                        Console.WriteLine(noteNode["Content"]);
+                        return;
+                    }
+                }
+            }
+            Console.WriteLine("Note not found.");
+        }
 
         static void PrintHelp()
         {
             Console.WriteLine("----------HELP----------\n");
-            Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can add a note.\nBy entering 2, you can delete a note.\nBy entering 3, you can exit the program.\n");
+            Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can view a note.\nBy entering 2, you can add a note.\nBy entering 3, you can delete a note.\nBy entering 4, you can exit the program.\n");
         }
         static void Main()
         {
@@ -137,10 +165,10 @@ namespace NotePad
             try
             {
                 Console.WriteLine("----------Welcome to NotePad----------\n");
-                Console.WriteLine("0: List all note titles\n1: Add a note\n2: Delete a note\n3: Exit\n4: Help\n");
+                Console.WriteLine("0: List all note titles\n1: Select a note to view\n2: Add a note\n3: Delete a note\n4: Exit\n5: Help\n");
                 Console.WriteLine("Enter selection:");
                 var selection = Console.ReadLine()?.ToString() ?? string.Empty;
-                if (selection is null || selection == string.Empty || (selection != "0" && selection != "1" && selection != "2" && selection != "3" && selection != "4"))
+                if (selection is null || selection == string.Empty || (selection != "0" && selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5"))
                 {
                     throw new Exception("Invalid selection");
                 }
@@ -150,16 +178,19 @@ namespace NotePad
                         ListAllNoteTitles();
                         break;
                     case "1":
-                        AddNote();
+                        SelectOnlyOneNoteToDisplay();
                         break;
                     case "2":
-                        DeleteNote();
+                        AddNote();
                         break;
                     case "3":
+                        DeleteNote();
+                        break;
+                    case "4":
                         Console.WriteLine("Exiting...");
                         Environment.Exit(0);
                         break;
-                    case "4":
+                    case "5":
                         PrintHelp();
                         break;
                     default:
