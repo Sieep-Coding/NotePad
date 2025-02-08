@@ -165,7 +165,7 @@ namespace NotePad
             catch (Exception e)
             {
                 Console.WriteLine($"Message:\n{e.Message}" +
-                                   "StackTrace:\n{e.StackTrace}");
+                                  $"StackTrace:\n{e.StackTrace}");
             }
             // }
         }
