@@ -7,7 +7,7 @@ namespace NotePad
         /// List all notes in the notes.json file
         /// </summary>
         /// <exception cref="Exception"></exception>
-        static void ListAllNotes()
+        static void ListAllNoteTitles()
         {
             var notes = File.ReadAllText("notes.json");
             var parsedNotes = JsonNode.Parse(notes);
@@ -21,7 +21,7 @@ namespace NotePad
             {
                 if (noteNode is JsonObject note)
                 {
-                    Console.WriteLine(note["Title"] + " - " + note["Content"] + " - " + note["CreatedOn"]);
+                    Console.WriteLine(note["Title"]);
                 }
             }
         }
@@ -130,7 +130,7 @@ namespace NotePad
             // {
             try
             {
-                Console.WriteLine("\nEnter 0: List all notes\nEnter 1: Add a note\nEnter 2: Delete a note\nEnter 3: Exit");
+                Console.WriteLine("\nEnter 0: List all note titles\nEnter 1: Add a note\nEnter 2: Delete a note\nEnter 3: Exit");
                 var selection = Console.ReadLine()?.ToString() ?? string.Empty;
                 if (selection is null || selection == string.Empty)
                 {
@@ -145,7 +145,7 @@ namespace NotePad
                 switch (selection)
                 {
                     case "0":
-                        ListAllNotes();
+                        ListAllNoteTitles();
                         break;
                     case "1":
                         AddNote();
