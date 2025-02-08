@@ -88,6 +88,7 @@ namespace NotePad
             }
             Main();
         }
+
         /// <summary>
         /// Delete a note from the notes.json file.
         /// </summary>
@@ -118,6 +119,7 @@ namespace NotePad
             }
             Console.WriteLine("Note not found.");
         }
+
         /// <summary>
         /// Select only one note to display.
         /// </summary>
@@ -147,10 +149,23 @@ namespace NotePad
             Console.WriteLine("Note not found.");
         }
 
+        /// <summary>
+        /// Print help to the console.
+        /// </summary>
         static void PrintHelp()
         {
+            try
+            {
             Console.WriteLine("----------HELP----------\n");
             Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can view a note.\nBy entering 2, you can add a note.\nBy entering 3, you can delete a note.\nBy entering 4, you can exit the program.\n");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Message:\n{e.Message}" +
+                                  $"StackTrace:\n{e.StackTrace}");
+                                  
+                throw new Exception("Error in PrintHelp");
+            }
         }
         static void Main()
         {
@@ -202,6 +217,7 @@ namespace NotePad
             {
                 Console.WriteLine($"Message:\n{e.Message}" +
                                   $"StackTrace:\n{e.StackTrace}");
+                throw new Exception("Error in Main");
             }
             // }
         }
