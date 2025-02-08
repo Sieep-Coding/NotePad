@@ -17,6 +17,7 @@ namespace NotePad
                 throw new Exception("No notes found.");
             }
             var notesArray = parsedNotes.AsArray();
+            Console.WriteLine("----------All Note Titles----------");
             foreach (var noteNode in notesArray)
             {
                 if (noteNode is JsonObject note)
@@ -141,7 +142,8 @@ namespace NotePad
                 {
                     if (noteNode["Title"]?.ToString() == title)
                     {
-                        Console.WriteLine(noteNode["Content"]);
+                        Console.WriteLine($"-----------------{title}-----------------");
+                        Console.WriteLine(noteNode["Content"]?.ToString());
                         return;
                     }
                 }
@@ -191,7 +193,7 @@ namespace NotePad
                 {
                     case "0":
                         ListAllNoteTitles();
-                        break;
+                        return;
                     case "1":
                         SelectOnlyOneNoteToDisplay();
                         break;
