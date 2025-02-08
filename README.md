@@ -21,7 +21,7 @@ dotnet build && dotnet run
 
 ## License
 
-(License)[LICENSE]
+[LICENSE](License)
 
 ## Contact
 
