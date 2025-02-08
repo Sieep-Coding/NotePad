@@ -56,6 +56,9 @@ namespace NotePad
 
         /// <summary>
         /// Run the main method if no note has been created in the past 24 hours.
+        /// TODO: 
+        //      - Get this working.
+        //      - Make sure that this app is set to start on boot.
         /// </summary>
         /// <exception cref="Exception"></exception>
         static void RunMainIfNoNoteInPast24Hours()
