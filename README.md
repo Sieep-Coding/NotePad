@@ -1,6 +1,6 @@
 # NotePad Reminder
 
-A CLI tool for writing daily notes.
+A CLI for writing daily notes.
 
 ## Requirements
 
