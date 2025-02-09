@@ -53,6 +53,41 @@ namespace NotePad
         }
 
         /// <summary>
+        /// List all notes in the notes.json file.
+        /// TODO: Add to main for user to select a note to view.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        static void ListAllNotes()
+        {
+            try
+            {
+                var notes = File.ReadAllText("notes.json");
+                var parsedNotes = JsonNode.Parse(notes);
+                if (parsedNotes == null || notes == null)
+                {
+                    throw new Exception("No notes found.");
+                }
+                var notesArray = parsedNotes.AsArray();
+                Console.WriteLine("----------All Notes----------");
+                foreach (var noteNode in notesArray)
+                {
+                    if (noteNode is JsonObject note)
+                    {
+                        Console.WriteLine($"-----------------{note["Title"]}-----------------\n");
+                        Console.WriteLine(note["Content"]?.ToString() + "\n" + "Created on:\n" + note["CreatedOn"]?.ToString() + "\n");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Message:\n{e.Message}" +
+                                  $"StackTrace:\n{e.StackTrace}");
+
+                throw new Exception("Error in ListAllNotes");
+            }
+        }
+
+        /// <summary>
         /// Add a note to the notes.json file
         /// </summary>
         /// <exception cref="Exception"></exception>
