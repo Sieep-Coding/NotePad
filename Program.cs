@@ -4,29 +4,43 @@ namespace NotePad
     class NotePadClass
     {
         /// <summary>
+        /// Not used yet. I can use this for the menu selection switch/case.
+        /// Program state enum.
+        /// </summary>
+        enum ProgramMenuState
+        {
+            ListAllNoteTitles,
+            SelectOnlyOneNoteToDisplay,
+            AddNote,
+            DeleteNote,
+            Exit,
+            PrintHelp
+        }
+
+        /// <summary>
         /// List all notes in the notes.json file
         /// </summary>
         /// <exception cref="Exception"></exception>
         static void ListAllNoteTitles()
         {
-            try 
+            try
             {
-            var notes = File.ReadAllText("notes.json");
-            var parsedNotes = JsonNode.Parse(notes);
-            if (parsedNotes == null || notes == null)
-            {
-
-                throw new Exception("No notes found.");
-            }
-            var notesArray = parsedNotes.AsArray();
-            Console.WriteLine("----------All Note Titles----------");
-            foreach (var noteNode in notesArray)
-            {
-                if (noteNode is JsonObject note)
+                var notes = File.ReadAllText("notes.json");
+                var parsedNotes = JsonNode.Parse(notes);
+                if (parsedNotes == null || notes == null)
                 {
-                    Console.WriteLine(note["Title"]);
+
+                    throw new Exception("No notes found.");
                 }
-            }
+                var notesArray = parsedNotes.AsArray();
+                Console.WriteLine("----------All Note Titles----------");
+                foreach (var noteNode in notesArray)
+                {
+                    if (noteNode is JsonObject note)
+                    {
+                        Console.WriteLine(note["Title"]);
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -45,26 +59,26 @@ namespace NotePad
         {
             try
             {
-            Console.WriteLine("Enter note title:");
-            var title = Console.ReadLine();
-            Console.WriteLine("Enter note content:");
-            var content = Console.ReadLine();
-            var notes = File.ReadAllText("notes.json");
-            var parsedNotes = JsonNode.Parse(notes);
-            if (parsedNotes == null || notes == null)
-            {
-                throw new Exception("No notes found.");
-            }
-            var notesArray = parsedNotes.AsArray();
-            var newNote = new JsonObject
-            {
-                ["NoteID"] = Guid.NewGuid().ToString(),
-                ["Title"] = title,
-                ["Content"] = content,
-                ["CreatedOn"] = DateTime.Now
-            };
-            notesArray.Add(newNote);
-            File.WriteAllText("notes.json", notesArray.ToString());
+                Console.WriteLine("Enter note title:");
+                var title = Console.ReadLine();
+                Console.WriteLine("Enter note content:");
+                var content = Console.ReadLine();
+                var notes = File.ReadAllText("notes.json");
+                var parsedNotes = JsonNode.Parse(notes);
+                if (parsedNotes == null || notes == null)
+                {
+                    throw new Exception("No notes found.");
+                }
+                var notesArray = parsedNotes.AsArray();
+                var newNote = new JsonObject
+                {
+                    ["NoteID"] = Guid.NewGuid().ToString(),
+                    ["Title"] = title,
+                    ["Content"] = content,
+                    ["CreatedOn"] = DateTime.Now
+                };
+                notesArray.Add(newNote);
+                File.WriteAllText("notes.json", notesArray.ToString());
             }
             catch (Exception e)
             {
@@ -122,29 +136,29 @@ namespace NotePad
         {
             try
             {
-            Console.WriteLine("Enter note title to delete:");
-            var title = Console.ReadLine();
-            var notes = File.ReadAllText("notes.json");
-            var parsedNotes = JsonNode.Parse(notes);
-            if (parsedNotes == null || notes == null)
-            {
-                throw new Exception("No notes found.");
-            }
-            var notesArray = parsedNotes.AsArray();
-            foreach (var noteNode in notesArray)
-            {
-                if (noteNode is JsonObject)
+                Console.WriteLine("Enter note title to delete:");
+                var title = Console.ReadLine();
+                var notes = File.ReadAllText("notes.json");
+                var parsedNotes = JsonNode.Parse(notes);
+                if (parsedNotes == null || notes == null)
                 {
-                    if (noteNode["Title"]?.ToString() == title)
+                    throw new Exception("No notes found.");
+                }
+                var notesArray = parsedNotes.AsArray();
+                foreach (var noteNode in notesArray)
+                {
+                    if (noteNode is JsonObject)
                     {
-                        notesArray.Remove(noteNode);
-                        File.WriteAllText("notes.json", notesArray.ToString());
-                        Console.WriteLine("Note deleted.");
-                        return;
+                        if (noteNode["Title"]?.ToString() == title)
+                        {
+                            notesArray.Remove(noteNode);
+                            File.WriteAllText("notes.json", notesArray.ToString());
+                            Console.WriteLine("Note deleted.");
+                            return;
+                        }
                     }
                 }
-            }
-            Console.WriteLine("Note not found.");
+                Console.WriteLine("Note not found.");
             }
             catch (Exception e)
             {
