@@ -130,26 +130,36 @@ namespace NotePad
         /// <exception cref="Exception"></exception>
         static void SelectOnlyOneNoteToDisplay()
         {
-            Console.WriteLine("Enter note title to display:");
-            var title = Console.ReadLine();
-            var notes = File.ReadAllText("notes.json");
-            var parsedNotes = JsonNode.Parse(notes);
-            if (parsedNotes == null || notes == null)
+            try
             {
-                throw new Exception("No notes found.");
-            }
-            var notesArray = parsedNotes.AsArray();
-            foreach (var noteNode in notesArray)
-            {
-                if (noteNode is JsonObject)
+                Console.WriteLine("Enter note title to display:");
+                var title = Console.ReadLine();
+                var notes = File.ReadAllText("notes.json");
+                var parsedNotes = JsonNode.Parse(notes);
+                if (parsedNotes == null || notes == null)
                 {
-                    if (noteNode["Title"]?.ToString() == title)
+                    throw new Exception("No notes found.");
+                }
+                var notesArray = parsedNotes.AsArray();
+                foreach (var noteNode in notesArray)
+                {
+                    if (noteNode is JsonObject)
                     {
-                        Console.WriteLine($"-----------------{title}-----------------");
-                        Console.WriteLine(noteNode["Content"]?.ToString());
-                        return;
+                        if (noteNode["Title"]?.ToString() == title)
+                        {
+                            Console.WriteLine($"-----------------{title}-----------------");
+                            Console.WriteLine(noteNode["Content"]?.ToString());
+                            return;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Message:\n{e.Message}" +
+                                  $"StackTrace:\n{e.StackTrace}");
+
+                throw new Exception("Error in SelectOnlyOneNoteToDisplay");
             }
             Console.WriteLine("Note not found.");
         }
@@ -161,14 +171,14 @@ namespace NotePad
         {
             try
             {
-            Console.WriteLine("----------HELP----------\n");
-            Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can view a note.\nBy entering 2, you can add a note.\nBy entering 3, you can delete a note.\nBy entering 4, you can exit the program.\n");
+                Console.WriteLine("----------HELP----------\n");
+                Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can view a note.\nBy entering 2, you can add a note.\nBy entering 3, you can delete a note.\nBy entering 4, you can exit the program.\n");
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Message:\n{e.Message}" +
                                   $"StackTrace:\n{e.StackTrace}");
-                                  
+
                 throw new Exception("Error in PrintHelp");
             }
         }
@@ -222,6 +232,7 @@ namespace NotePad
             {
                 Console.WriteLine($"Message:\n{e.Message}" +
                                   $"StackTrace:\n{e.StackTrace}");
+
                 throw new Exception("Error in Main");
             }
             // }
