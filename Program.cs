@@ -58,6 +58,7 @@ namespace NotePad
             var notesArray = parsedNotes.AsArray();
             var newNote = new JsonObject
             {
+                ["NoteID"] = Guid.NewGuid().ToString(),
                 ["Title"] = title,
                 ["Content"] = content,
                 ["CreatedOn"] = DateTime.Now
