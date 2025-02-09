@@ -239,6 +239,8 @@ namespace NotePad
             // {
             try
             {
+                while (true)
+                {
                 Console.WriteLine("----------Welcome to NotePad----------\n");
                 Console.WriteLine("0: List all note titles\n1: Select a note to view\n2: Add a note\n3: Delete a note\n4: Exit\n5: Help\n");
                 Console.WriteLine("Enter selection:");
@@ -247,31 +249,39 @@ namespace NotePad
                 {
                     throw new Exception("Invalid selection");
                 }
+                foreach (var c in selection)
+                {
+                    if (!char.IsDigit(c) || char.IsWhiteSpace(c) || char.IsPunctuation(c) || char.IsSeparator(c) || char.IsSymbol(c))
+                    {
+                        throw new Exception("Invalid selection");
+                    }
+                }
                 switch (selection)
                 {
                     case "0":
                         ListAllNoteTitles();
-                        return;
+                        continue;
                     case "1":
                         SelectOnlyOneNoteToDisplay();
-                        break;
+                        continue;
                     case "2":
                         AddNote();
-                        break;
+                        continue;
                     case "3":
                         DeleteNote();
-                        break;
+                        continue;
                     case "4":
                         Console.WriteLine("Exiting...");
                         Environment.Exit(0);
                         break;
                     case "5":
                         PrintHelp();
-                        break;
+                        continue;
                     default:
                         Console.WriteLine("Invalid selection");
                         break;
                 }
+            }
             }
             catch (Exception e)
             {
