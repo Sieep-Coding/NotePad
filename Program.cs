@@ -10,6 +10,7 @@ namespace NotePad
         enum ProgramMenuState
         {
             ListAllNoteTitles,
+            SelectOnlyOneNoteByIndex,
             SelectOnlyOneNoteToDisplay,
             AddNote,
             DeleteNote,
@@ -72,6 +73,7 @@ namespace NotePad
                 var notesArray = parsedNotes.AsArray();
                 var newNote = new JsonObject
                 {
+                    ["Index"] = notesArray.Count,
                     ["NoteID"] = Guid.NewGuid().ToString(),
                     ["Title"] = title,
                     ["Content"] = content,
@@ -79,6 +81,7 @@ namespace NotePad
                 };
                 notesArray.Add(newNote);
                 File.WriteAllText("notes.json", notesArray.ToString());
+                Console.WriteLine("Note added.\n");
             }
             catch (Exception e)
             {
@@ -192,8 +195,47 @@ namespace NotePad
                     {
                         if (noteNode["Title"]?.ToString() == title)
                         {
-                            Console.WriteLine($"-----------------{title}-----------------");
-                            Console.WriteLine(noteNode["Content"]?.ToString());
+                            Console.WriteLine($"-----------------{title}-----------------\n");
+                            Console.WriteLine(noteNode["Content"]?.ToString() + "\n" + "Created on:\n" + noteNode["CreatedOn"]?.ToString() + "\n");
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Message:\n{e.Message}" +
+                                  $"StackTrace:\n{e.StackTrace}");
+
+                throw new Exception("Error in SelectOnlyOneNoteToDisplay");
+            }
+            Console.WriteLine("Note not found.");
+        }
+        /// <summary>
+        /// Select only one note to display by index.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        static void SelectOnlyOneNoteByIndex()
+        {
+            try
+            {
+                Console.WriteLine("Enter note index to display:");
+                var index = Console.ReadLine();
+                var notes = File.ReadAllText("notes.json");
+                var parsedNotes = JsonNode.Parse(notes);
+                if (parsedNotes == null || notes == null)
+                {
+                    throw new Exception("No notes found.");
+                }
+                var notesArray = parsedNotes.AsArray();
+                foreach (var noteNode in notesArray)
+                {
+                    if (noteNode is JsonObject)
+                    {
+                        if (noteNode["Index"]?.ToString() == index)
+                        {
+                            Console.WriteLine($"-----------------{noteNode["Title"]}-----------------\n");
+                            Console.WriteLine(noteNode["Content"]?.ToString() + "\n" + "Created on:\n" + noteNode["CreatedOn"]?.ToString() + "\n");
                             return;
                         }
                     }
@@ -217,7 +259,7 @@ namespace NotePad
             try
             {
                 Console.WriteLine("----------HELP----------\n");
-                Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can view a note.\nBy entering 2, you can add a note.\nBy entering 3, you can delete a note.\nBy entering 4, you can exit the program.\n");
+                Console.WriteLine("By entering 0, you can list all note titles.\nBy entering 1, you can view a note by index.\nBy entering 2, you can view a note by title.\nBy entering 3, you can add a note.\nBy entering 4, you can delete a note.\nBy entering 5, you can exit the program.\n");
             }
             catch (Exception e)
             {
@@ -241,47 +283,50 @@ namespace NotePad
             {
                 while (true)
                 {
-                Console.WriteLine("----------Welcome to NotePad----------\n");
-                Console.WriteLine("0: List all note titles\n1: Select a note to view\n2: Add a note\n3: Delete a note\n4: Exit\n5: Help\n");
-                Console.WriteLine("Enter selection:");
-                var selection = Console.ReadLine()?.ToString() ?? string.Empty;
-                if (selection is null || selection == string.Empty || (selection != "0" && selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5"))
-                {
-                    throw new Exception("Invalid selection");
-                }
-                foreach (var c in selection)
-                {
-                    if (!char.IsDigit(c) || char.IsWhiteSpace(c) || char.IsPunctuation(c) || char.IsSeparator(c) || char.IsSymbol(c))
+                    Console.WriteLine("----------Welcome to NotePad----------\n");
+                    Console.WriteLine("0: List all note titles\n1: Select a note to view by index\n2: Select a note to view by title\n3: Add a note\n4: Delete a note\n5: Exit\n6: Help\n");
+                    Console.WriteLine("Enter selection:");
+                    var selection = Console.ReadLine()?.ToString() ?? string.Empty;
+                    if (selection is null || selection == string.Empty || (selection != "0" && selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6"))
                     {
                         throw new Exception("Invalid selection");
                     }
+                    foreach (var c in selection)
+                    {
+                        if (!char.IsDigit(c) || char.IsWhiteSpace(c) || char.IsPunctuation(c) || char.IsSeparator(c) || char.IsSymbol(c))
+                        {
+                            throw new Exception("Invalid selection");
+                        }
+                    }
+                    switch (selection)
+                    {
+                        case "0":
+                            ListAllNoteTitles();
+                            continue;
+                        case "1":
+                            SelectOnlyOneNoteByIndex();
+                            continue;
+                        case "2":
+                            SelectOnlyOneNoteToDisplay();
+                            continue;
+                        case "3":
+                            AddNote();
+                            continue;
+                        case "4":
+                            DeleteNote();
+                            continue;
+                        case "5":
+                            Console.WriteLine("Exiting...");
+                            Environment.Exit(0);
+                            break;
+                        case "6":
+                            PrintHelp();
+                            continue;
+                        default:
+                            Console.WriteLine("Invalid selection");
+                            break;
+                    }
                 }
-                switch (selection)
-                {
-                    case "0":
-                        ListAllNoteTitles();
-                        continue;
-                    case "1":
-                        SelectOnlyOneNoteToDisplay();
-                        continue;
-                    case "2":
-                        AddNote();
-                        continue;
-                    case "3":
-                        DeleteNote();
-                        continue;
-                    case "4":
-                        Console.WriteLine("Exiting...");
-                        Environment.Exit(0);
-                        break;
-                    case "5":
-                        PrintHelp();
-                        continue;
-                    default:
-                        Console.WriteLine("Invalid selection");
-                        break;
-                }
-            }
             }
             catch (Exception e)
             {
