@@ -9,6 +9,8 @@ namespace NotePad
         /// <exception cref="Exception"></exception>
         static void ListAllNoteTitles()
         {
+            try 
+            {
             var notes = File.ReadAllText("notes.json");
             var parsedNotes = JsonNode.Parse(notes);
             if (parsedNotes == null || notes == null)
@@ -25,6 +27,14 @@ namespace NotePad
                     Console.WriteLine(note["Title"]);
                 }
             }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Message:\n{e.Message}" +
+                                  $"StackTrace:\n{e.StackTrace}");
+
+                throw new Exception("Error in ListAllNoteTitles");
+            }
         }
 
         /// <summary>
@@ -33,6 +43,8 @@ namespace NotePad
         /// <exception cref="Exception"></exception>
         static void AddNote()
         {
+            try
+            {
             Console.WriteLine("Enter note title:");
             var title = Console.ReadLine();
             Console.WriteLine("Enter note content:");
@@ -52,6 +64,14 @@ namespace NotePad
             };
             notesArray.Add(newNote);
             File.WriteAllText("notes.json", notesArray.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Message:\n{e.Message}" +
+                                  $"StackTrace:\n{e.StackTrace}");
+
+                throw new Exception("Error in AddNote");
+            }
         }
 
         /// <summary>
@@ -99,6 +119,8 @@ namespace NotePad
         /// <exception cref="Exception"></exception>
         static void DeleteNote()
         {
+            try
+            {
             Console.WriteLine("Enter note title to delete:");
             var title = Console.ReadLine();
             var notes = File.ReadAllText("notes.json");
@@ -122,6 +144,14 @@ namespace NotePad
                 }
             }
             Console.WriteLine("Note not found.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Message:\n{e.Message}" +
+                                  $"StackTrace:\n{e.StackTrace}");
+
+                throw new Exception("Error in DeleteNote");
+            }
         }
 
         /// <summary>
